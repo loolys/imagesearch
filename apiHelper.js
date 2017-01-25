@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const instance = axios.create({
-	baseURL: 'https://api.imgur.com/3/g/',
+	baseURL: 'https://api.imgur.com/3/gallery/r/',
 	timeout: 2000,
 	headers: { 'Authorization': 'Client-ID 94d17a09269dea1' }
 });

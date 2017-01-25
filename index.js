@@ -2,17 +2,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const path = require('path');
-// const stringify = require('json-stringify-safe');
 const apiCall = require('./apiHelper');
 
 const app = express();
 
-app.get('/', function(req, res) {
-	apiCall('memes/viral/0.json')
+app.get('/search/:term', function(req, res) {
+	let call = req.params.term + '/time/0.json';
+	let offset = parseInt(req.query.offset);
+	if (offset <= 0) {
+		offset = 1;
+	} else if (offset > 59) {
+		offset = 59;
+	}
+	console.log(offset);
+	apiCall(call)
 		.then(function (info) {
-			console.log(info.data.data[0]);
 			let data = [];
-			for (let i = 0; i < 10; i++) {
+			for (let i = 0; i < offset; i++) {
 				let imgData = {
 					link: info.data.data[i].link,
 					title: info.data.data[i].title
