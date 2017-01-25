@@ -4,9 +4,27 @@ const axios = require('axios');
 const path = require('path');
 const apiCall = require('./apiHelper');
 
+const url = process.env.MONGOLAB_URI;
+mongoose.connect(url);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('connected to db');
+});
+
+const searchSchema = new mongoose.Schema({
+	term: String
+});
+const searchModel = mongoose.model('Search', searchSchema);
+
 const app = express();
 
 app.get('/search/:term', function(req, res) {
+	let term = new searchModel({ term: req.params.term });
+	term.save(function(err){
+		if (err) throw err;
+		console.log('saved in db');
+	});
 	let call = req.params.term + '/time/0.json';
 	let offset = parseInt(req.query.offset);
 	if (offset <= 0) {
